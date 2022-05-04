@@ -1,3 +1,4 @@
+import 'package:b_archive/screen/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:b_archive/style/style.dart' as style;
 
@@ -11,6 +12,13 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool isLoading = false;
+
+  void processLogin() {
+    setState(() {
+      isLoading = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,12 @@ class _LoginState extends State<Login> {
                   style: style.subtitle(),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Registration()));
+                  },
                   child: Container(
                     margin: EdgeInsets.only(left: 5),
                     child: Text(
@@ -60,12 +73,19 @@ class _LoginState extends State<Login> {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 10),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
-                  width: double.infinity,
-                  child: Container(decoration: BoxDecoration(), child: TextButton(onPressed: (){}, style: style.button(context), child: Text("Login", style: TextStyle(color: Colors.white),))))
-            )
+                margin: EdgeInsets.only(top: 10),
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    width: double.infinity,
+                    child: Container(
+                        decoration: BoxDecoration(),
+                        child: TextButton(
+                            onPressed: processLogin,
+                            style: style.button(context, isLoading),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(color: Colors.white),
+                            )))))
           ],
         ),
       ),

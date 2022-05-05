@@ -51,3 +51,14 @@ Widget checkBox(BuildContext context, bool value) => Container(
               size: 25, color: Theme.of(context).colorScheme.primary)
           : Icon(Icons.square, size: 25, color: Colors.grey.shade400),
     );
+
+TextStyle profileSubtitle(BuildContext context) => TextStyle(
+  fontSize: 20,
+  color: Theme.of(context).colorScheme.primary,
+  fontWeight: FontWeight.w500
+);
+
+TextStyle textMenuStyle(BuildContext context, Color color) => TextStyle(
+  fontSize: 20,
+  color: color,
+);

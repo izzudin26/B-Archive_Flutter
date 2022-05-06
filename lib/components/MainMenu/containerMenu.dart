@@ -22,7 +22,11 @@ class ContainerMenu extends StatelessWidget {
           )),
           backgroundColor: MaterialStateColor.resolveWith((states) => states.contains(MaterialState.pressed) ? menuItem.color.withOpacity(0.2) : Colors.white)
         ),
-        onPressed: (){},
+        onPressed: (){
+          if(menuItem.classWidget != null){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => menuItem.classWidget!));
+          }
+        },
         child: Container(
           padding: EdgeInsets.all(3),
           child: Row(children: [

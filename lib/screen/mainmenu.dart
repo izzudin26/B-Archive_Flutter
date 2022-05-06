@@ -1,4 +1,5 @@
 import 'package:b_archive/components/MainMenu/userProfile.dart';
+import 'package:b_archive/screen/formTransaction.dart';
 import 'package:flutter/material.dart';
 import 'package:b_archive/style/style.dart' as style;
 import 'package:b_archive/components/MainMenu/containerMenu.dart';
@@ -7,8 +8,9 @@ class MenuItem {
   String label;
   Color color;
   Icon prefixIcon;
-  MenuItem({required this.label, required this.color, required this.prefixIcon});
-  
+  Widget? classWidget;
+  MenuItem({required this.label, required this.color, required this.prefixIcon, this.classWidget});
+
   Icon getColoredIcon() => Icon(prefixIcon.icon, color: color);
 }
 
@@ -22,7 +24,7 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
 
   List<MenuItem> menuItems = [
-    MenuItem(label: "Buat Arsip Transaksi", color: Colors.blue, prefixIcon: Icon(Icons.create)),
+    MenuItem(label: "Buat Arsip Transaksi", color: Colors.blue, prefixIcon: Icon(Icons.create), classWidget: FormTransaction()),
     MenuItem(label: "Buka Arsip Transaksi", color: Colors.blue, prefixIcon: Icon(Icons.archive)),
     MenuItem(label: "Scan Arsip Teman", color: Colors.blue, prefixIcon: Icon(Icons.qr_code)),
     MenuItem(label: "Logout Akun", color: Colors.red, prefixIcon: Icon(Icons.logout))

@@ -27,6 +27,15 @@ class _RegistrationState extends State<Registration> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    fullname.dispose();
+    email.dispose();
+    password.dispose();
+    passwordConfirmation.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(

@@ -110,25 +110,27 @@ class _FormTransactionState extends State<FormTransaction> {
             margin: EdgeInsets.only(top: 7, bottom: 7),
             child: InkWell(
                 onTap: _imagePicker,
-                child: image != null ? Image.file(File(image!.path)) : Container(
-                  padding: EdgeInsets.only(top: 40, bottom: 40),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1.5),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(
-                      child: Column(
-                    children: [
-                      Icon(Icons.image,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: MediaQuery.of(context).size.width * 0.1),
-                      Text("Upload Bukti",
-                          style: style.textMenuStyle(
-                              context, Theme.of(context).colorScheme.primary))
-                    ],
-                  )),
-                )),
+                child: image != null
+                    ? Image.file(File(image!.path))
+                    : Container(
+                        padding: EdgeInsets.only(top: 40, bottom: 40),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 1.5),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Center(
+                            child: Column(
+                          children: [
+                            Icon(Icons.image,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: MediaQuery.of(context).size.width * 0.1),
+                            Text("Upload Bukti",
+                                style: style.textMenuStyle(context,
+                                    Theme.of(context).colorScheme.primary))
+                          ],
+                        )),
+                      )),
           ),
           Container(
               margin: EdgeInsets.only(top: 7, bottom: 7),

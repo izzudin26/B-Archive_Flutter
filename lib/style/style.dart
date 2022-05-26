@@ -32,17 +32,20 @@ ButtonStyle button(BuildContext context, bool isLoading) => ButtonStyle(
     textStyle: MaterialStateTextStyle.resolveWith(
         (states) => TextStyle(fontSize: 17, color: Colors.white)));
 
-
-ButtonStyle registrationButton(BuildContext context, bool isLoading, bool isDisable) => ButtonStyle(
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-    backgroundColor: MaterialStateColor.resolveWith((states) => isLoading
-        ? Colors.blue.shade100
-        : isDisable ? Colors.grey.shade400 : states.contains(MaterialState.pressed)
-            ? Color.fromARGB(255, 116, 193, 255)
-            : Theme.of(context).colorScheme.primary),
-    textStyle: MaterialStateTextStyle.resolveWith(
-        (states) => TextStyle(fontSize: 17, color: Colors.white)));
+ButtonStyle registrationButton(
+        BuildContext context, bool isLoading, bool isDisable) =>
+    ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+        backgroundColor: MaterialStateColor.resolveWith((states) => isLoading
+            ? Colors.blue.shade100
+            : isDisable
+                ? Colors.grey.shade400
+                : states.contains(MaterialState.pressed)
+                    ? Color.fromARGB(255, 116, 193, 255)
+                    : Theme.of(context).colorScheme.primary),
+        textStyle: MaterialStateTextStyle.resolveWith(
+            (states) => TextStyle(fontSize: 17, color: Colors.white)));
 
 Widget checkBox(BuildContext context, bool value) => Container(
       padding: EdgeInsets.all(5),
@@ -53,12 +56,11 @@ Widget checkBox(BuildContext context, bool value) => Container(
     );
 
 TextStyle profileSubtitle(BuildContext context) => TextStyle(
-  fontSize: 20,
-  color: Theme.of(context).colorScheme.primary,
-  fontWeight: FontWeight.w500
-);
+    fontSize: 20,
+    color: Theme.of(context).colorScheme.primary,
+    fontWeight: FontWeight.w500);
 
 TextStyle textMenuStyle(BuildContext context, Color color) => TextStyle(
-  fontSize: 20,
-  color: color,
-);
+      fontSize: 20,
+      color: color,
+    );

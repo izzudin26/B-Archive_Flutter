@@ -104,7 +104,8 @@ class _RegistrationState extends State<Registration> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: 5),
@@ -121,13 +122,12 @@ class _RegistrationState extends State<Registration> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: (){
-                    setState(() {
-                      isUserAgree = !isUserAgree;
-                    });
-                  },
-                  child: style.checkBox(context, isUserAgree)
-                ),
+                    onTap: () {
+                      setState(() {
+                        isUserAgree = !isUserAgree;
+                      });
+                    },
+                    child: style.checkBox(context, isUserAgree)),
                 Text(
                   "Saya telah menyetujui persyaratan aplikasi",
                   style: style.subtitle(),
@@ -143,7 +143,8 @@ class _RegistrationState extends State<Registration> {
                         decoration: BoxDecoration(),
                         child: TextButton(
                             onPressed: isUserAgree ? processLogin : null,
-                            style: style.registrationButton(context, isLoading, !isUserAgree),
+                            style: style.registrationButton(
+                                context, isLoading, !isUserAgree),
                             child: Text(
                               "Registrasi",
                               style: TextStyle(color: Colors.white),

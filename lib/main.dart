@@ -1,5 +1,6 @@
 import 'package:b_archive/screen/login.dart';
 import 'package:b_archive/screen/mainmenu.dart';
+import 'package:b_archive/screen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MainMenu(),
+      home: SplashScreen(),
     );
   }
 }

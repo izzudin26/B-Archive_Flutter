@@ -17,7 +17,7 @@ class SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer(Duration(seconds: 2), () async {
+    Timer(Duration(seconds: 3), () async {
       await fetchToken();
     });
   }
@@ -27,9 +27,10 @@ class SplashScreenState extends State<SplashScreen> {
     if (token != null) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MainMenu()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Login()));
     }
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override

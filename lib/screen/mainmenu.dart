@@ -1,20 +1,25 @@
 import 'package:b_archive/components/MainMenu/userProfile.dart';
 import 'package:b_archive/screen/formTransaction.dart';
+import 'package:b_archive/screen/login.dart';
 import 'package:b_archive/screen/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:b_archive/style/style.dart' as style;
 import 'package:b_archive/components/MainMenu/containerMenu.dart';
+import 'package:b_archive/service/auth.dart' as _auth;
 
 class MenuItem {
   String label;
   Color color;
   Icon prefixIcon;
   Widget? classWidget;
+  void callback;
+
   MenuItem(
       {required this.label,
       required this.color,
       required this.prefixIcon,
-      this.classWidget});
+      this.classWidget,
+      this.callback});
 
   Icon getColoredIcon() => Icon(prefixIcon.icon, color: color);
 }
@@ -27,6 +32,20 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  String name = "";
+  @override
+  void initState() {
+    super.initState();
+    fetchName();
+  }
+
+  void fetchName() async {
+    String? fullname = await _auth.getFullname();
+    setState(() {
+      name = fullname!;
+    });
+  }
+
   List<MenuItem> menuItems = [
     MenuItem(
         label: "Buat Arsip Transaksi",
@@ -42,8 +61,6 @@ class _MainMenuState extends State<MainMenu> {
         color: Colors.blue,
         prefixIcon: Icon(Icons.qr_code),
         classWidget: Scanner()),
-    MenuItem(
-        label: "Logout Akun", color: Colors.red, prefixIcon: Icon(Icons.logout))
   ];
 
   Widget menuSection() => Column(
@@ -59,7 +76,7 @@ class _MainMenuState extends State<MainMenu> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserProfile(username: "Izzudin Ar Rafiq"),
+            UserProfile(username: name),
             SizedBox(height: size.height * 0.2),
             Container(
               padding: EdgeInsets.all(20),
@@ -68,7 +85,36 @@ class _MainMenuState extends State<MainMenu> {
                 children: [
                   Text("Akses menu kamu yuk !",
                       style: style.textMenuStyle(context, Colors.black)),
-                  menuSection()
+                  menuSection(),
+                  Container(
+                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                    child: TextButton(
+                      style: ButtonStyle(
+                          side: MaterialStateProperty.resolveWith((states) =>
+                              BorderSide(color: Colors.red, width: 1)),
+                          shape: MaterialStateProperty.resolveWith((states) =>
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => states.contains(MaterialState.pressed)
+                                  ? Colors.red.withOpacity(0.2)
+                                  : Colors.white)),
+                      onPressed: () async {
+                        await _auth.removeToken();
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => Login()));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(3),
+                        child: Row(children: [
+                          Icon(Icons.logout, color: Colors.red),
+                          SizedBox(width: 10),
+                          Text("Logout",
+                              style: style.textMenuStyle(context, Colors.red))
+                        ]),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )

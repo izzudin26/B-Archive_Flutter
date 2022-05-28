@@ -1,9 +1,11 @@
 import 'dart:io';
-
+import 'package:b_archive/model/blockdata.dart';
 import 'package:flutter/material.dart';
 import 'package:b_archive/style/style.dart' as style;
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:b_archive/service/webservice.dart' as _webservice;
+import 'package:b_archive/components/snackbarMessage.dart';
 
 class FormTransaction extends StatefulWidget {
   FormTransaction({Key? key}) : super(key: key);
@@ -15,9 +17,10 @@ class FormTransaction extends StatefulWidget {
 class _FormTransactionState extends State<FormTransaction> {
   final _formkey = GlobalKey<FormState>();
   XFile? image;
+  bool isLoading = false;
 
-  TextEditingController name = TextEditingController();
-  TextEditingController rekening = TextEditingController();
+  TextEditingController receiverName = TextEditingController();
+  TextEditingController receiverNumber = TextEditingController();
   TextEditingController date = TextEditingController();
   TextEditingController ref = TextEditingController();
   TextEditingController amount = TextEditingController();
@@ -37,10 +40,80 @@ class _FormTransactionState extends State<FormTransaction> {
     final ImagePicker _picker = ImagePicker();
     XFile? file = await _picker.pickImage(source: ImageSource.gallery);
     if (file != null) {
-      print(file.path);
       setState(() {
         image = file;
       });
+    }
+  }
+
+  String? validateReceiverName(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Nama Penerima tidak boleh kosong";
+    }
+    if (value.length < 3) {
+      return "Nama Penerima tidak boleh kurang dari 3 karakter";
+    }
+    return null;
+  }
+
+  String? validateReceiverNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Nomor tujuan tidak boleh kosong";
+    }
+    return null;
+  }
+
+  String? validateDate(String? value) {
+    if (value == null || value.isEmpty) {
+      return "tanggal tidak boleh kosong";
+    }
+    return null;
+  }
+
+  String? validateAmount(String? value) {
+    if (value == null || value.isEmpty) {
+      return "nominal tidak boleh kosong";
+    }
+    return null;
+  }
+
+  String? validateTransactionType(String? value) {
+    if (value == null || value.isEmpty) {
+      return "jenis transaksi tidak boleh kosong";
+    }
+    return null;
+  }
+
+  Future<void> processInsert() async {
+    if (_formkey.currentState!.validate()) {
+      if (image != null) {
+        setState(() {
+          isLoading = true;
+        });
+        try {
+          String imagename =
+              await _webservice.uploadImage(image: new File(image!.path));
+          Metadata metadata = Metadata(
+              receiverName: receiverName.text,
+              receiverNumber: receiverNumber.text,
+              transactionDate: date.text,
+              referenceNumber: ref.text,
+              amount: int.parse(amount.text),
+              note: note.text,
+              imageUri: imagename,
+              transactionType: transactionOption);
+          await _webservice.insertBlockdata(metadata: metadata);
+          showSnackbar(context, "Berhasil mengarsipkan data");
+          Navigator.pop(context);
+        } catch (e) {
+          showSnackbar(context, "$e");
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } else {
+        showSnackbar(context, "Bukti transaksi tidak boleh kosong");
+      }
     }
   }
 
@@ -51,37 +124,42 @@ class _FormTransactionState extends State<FormTransaction> {
           Container(
             margin: EdgeInsets.only(top: 10, bottom: 7),
             child: TextFormField(
-              decoration: style.textInput(context, "Nama Penerima"),
-              controller: name,
+              decoration: style.textInput(context, "Nama Penerima*"),
+              validator: validateReceiverName,
+              controller: receiverName,
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 7, bottom: 7),
             child: TextFormField(
-              decoration: style.textInput(context, "Nomor Tujuan Penerima"),
-              controller: rekening,
+              decoration: style.textInput(context, "Nomor Tujuan Penerima*"),
+              validator: validateReceiverNumber,
+              controller: receiverNumber,
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 7, bottom: 7),
             child: TextFormField(
-              decoration: style.textInput(context, "Tanggal Transaksi"),
+              decoration: style.textInput(context, "Tanggal Transaksi*"),
               controller: date,
               readOnly: true,
+              validator: validateDate,
               onTap: _showDatePicker,
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 7, bottom: 7),
             child: TextFormField(
-              decoration: style.textInput(context, "Nominal"),
+              decoration: style.textInput(context, "Nominal*"),
               keyboardType: TextInputType.number,
+              validator: validateAmount,
               controller: amount,
             ),
           ),
           Container(
               margin: EdgeInsets.only(top: 7, bottom: 7),
               child: DropdownButtonFormField<String>(
+                  validator: validateTransactionType,
                   decoration: style.textInput(context, "Jenis Transaksi"),
                   items: <String>["payment", "transfer", "topup"]
                       .map((e) => DropdownMenuItem(
@@ -137,10 +215,10 @@ class _FormTransactionState extends State<FormTransaction> {
               child: SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: processInsert,
                     child: Text("Arsipkan Transaksi",
                         style: style.textMenuStyle(context, Colors.white)),
-                    style: style.button(context, false)),
+                    style: style.button(context, isLoading)),
               )),
         ],
       ));

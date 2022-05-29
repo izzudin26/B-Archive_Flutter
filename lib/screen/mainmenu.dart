@@ -1,4 +1,5 @@
 import 'package:b_archive/components/MainMenu/userProfile.dart';
+import 'package:b_archive/screen/archive.dart';
 import 'package:b_archive/screen/formTransaction.dart';
 import 'package:b_archive/screen/login.dart';
 import 'package:b_archive/screen/scanner.dart';
@@ -55,7 +56,8 @@ class _MainMenuState extends State<MainMenu> {
     MenuItem(
         label: "Buka Arsip Transaksi",
         color: Colors.blue,
-        prefixIcon: Icon(Icons.archive)),
+        prefixIcon: Icon(Icons.archive),
+        classWidget: Archive()),
     MenuItem(
         label: "Scan Arsip Teman",
         color: Colors.blue,

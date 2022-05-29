@@ -56,7 +56,7 @@ class Blockdata {
 
   factory Blockdata.fromJson(Map<String, dynamic> json) {
     return Blockdata(
-        metadata: Metadata.fromJson(json["metdata"]),
+        metadata: Metadata.fromJson(json["metadata"]),
         timestamp: json["timestamp"],
         iteration: json["iteration"],
         hash: json["hash"]);

@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:b_archive/components/snackbarMessage.dart';
+import 'package:b_archive/model/blockdata.dart';
+import 'package:b_archive/screen/formTransactionView.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -13,6 +17,7 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   final GlobalKey _qr = GlobalKey(debugLabel: 'QR');
   Barcode? _resultScanner;
+  Map<String, dynamic>? resultJson;
   QRViewController? controller;
 
   @override
@@ -27,11 +32,22 @@ class _ScannerState extends State<Scanner> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      print(scanData.code);
-      setState(() {
-        _resultScanner = scanData;
-      });
+
+    controller.scannedDataStream.listen((scan) {
+      try {
+        Map<String, dynamic> data = jsonDecode(scan.code!);
+        Metadata metadata = Metadata.fromJson(data);
+        print(data);
+        controller.pauseCamera();
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FormTransactionView(metadata: metadata)));
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      } catch (e) {
+        showSnackbar(context, "QR Code tidak valid");
+        controller.resumeCamera();
+      }
     });
   }
 

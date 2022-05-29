@@ -34,3 +34,28 @@ Future<void> insertBlockdata({required Metadata metadata}) async {
     throw body['message'];
   }
 }
+
+Future<List<Blockdata>> getBlockdata() async {
+  String token = (await _auth.getToken())!;
+  Uri url = Uri.parse("$serverUri/blockchain");
+  final res = await http.get(url, headers: {"Authorization": token});
+  Map<String, dynamic> body = jsonDecode(res.body);
+  if (res.statusCode != 200) {
+    throw body['message'];
+  }
+  List<Blockdata> data =
+      (body['data'] as List).map((e) => Blockdata.fromJson(e)).toList();
+  return data;
+}
+
+Future<String> generateQRTOKEN({required String hashblock}) async {
+  Uri url = Uri.parse("$serverUri/blockchain/block/generate/$hashblock");
+  String token = (await _auth.getToken())!;
+  final res = await http.get(url, headers: {"Authorization": token});
+  Map<String, dynamic> body = jsonDecode(res.body);
+  if (res.statusCode != 200) {
+    throw body["message"];
+  } else {
+    return "$serverUri/blockchain/qr/$hashblock";
+  }
+}

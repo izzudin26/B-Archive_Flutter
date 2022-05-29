@@ -63,6 +63,13 @@ class _FormTransactionState extends State<FormTransaction> {
     return null;
   }
 
+  String? validateReference(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Nomor Referensi tidak boleh kosong";
+    }
+    return null;
+  }
+
   String? validateDate(String? value) {
     if (value == null || value.isEmpty) {
       return "tanggal tidak boleh kosong";
@@ -135,6 +142,14 @@ class _FormTransactionState extends State<FormTransaction> {
               decoration: style.textInput(context, "Nomor Tujuan Penerima*"),
               validator: validateReceiverNumber,
               controller: receiverNumber,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 7, bottom: 7),
+            child: TextFormField(
+              decoration: style.textInput(context, "Nomor Referensi*"),
+              validator: validateReference,
+              controller: ref,
             ),
           ),
           Container(

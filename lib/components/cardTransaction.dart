@@ -4,8 +4,10 @@ import 'package:b_archive/model/blockdata.dart';
 import 'package:b_archive/style/style.dart' as style;
 
 class CardTransaction extends StatelessWidget {
+  String hash;
   Metadata metadata;
-  CardTransaction({Key? key, required this.metadata}) : super(key: key);
+  CardTransaction({Key? key, required this.metadata, required this.hash})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,10 @@ class CardTransaction extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => FormTransactionView(metadata: metadata)));
+                builder: (context) => FormTransactionView(
+                      metadata: metadata,
+                      hash: hash,
+                    )));
       },
       child: Container(
         padding: EdgeInsets.all(15),

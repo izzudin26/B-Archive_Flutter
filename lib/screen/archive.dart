@@ -53,8 +53,12 @@ class _ArchiveState extends State<Archive> {
     );
   }
 
-  List<Widget> items() =>
-      blocks.map((e) => CardTransaction(metadata: e.metadata)).toList();
+  List<Widget> items() => blocks
+      .map((e) => CardTransaction(
+            metadata: e.metadata,
+            hash: e.hash,
+          ))
+      .toList();
 
   @override
   Widget build(BuildContext context) {

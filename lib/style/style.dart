@@ -64,3 +64,11 @@ TextStyle textMenuStyle(BuildContext context, Color color) => TextStyle(
       fontSize: 20,
       color: color,
     );
+
+TextStyle headerTransaction(BuildContext context) => TextStyle(
+    fontSize: 32,
+    color: Theme.of(context).colorScheme.primary,
+    fontWeight: FontWeight.bold);
+
+TextStyle subtitleCardTransaction() =>
+    TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 15);

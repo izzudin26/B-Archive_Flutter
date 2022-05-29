@@ -11,8 +11,8 @@ import 'package:flutter/services.dart';
 
 class FormTransactionView extends StatefulWidget {
   Metadata metadata;
-  String hash;
-  FormTransactionView({Key? key, required this.metadata, required this.hash})
+  String? hash;
+  FormTransactionView({Key? key, required this.metadata, this.hash})
       : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class _FormTransactionViewState extends State<FormTransactionView> {
     super.initState();
     setState(() {
       receiverName.text = metadata.receiverName;
-      receiverNumber.text = metadata.receiverName;
+      receiverNumber.text = metadata.receiverNumber;
       date.text = metadata.transactionDate;
       ref.text = metadata.referenceNumber;
       amount.text = metadata.amount.toString();
@@ -52,7 +52,7 @@ class _FormTransactionViewState extends State<FormTransactionView> {
       isLoading = true;
     });
     try {
-      String qrUrl = await _webservice.generateQRTOKEN(hashblock: widget.hash);
+      String qrUrl = await _webservice.generateQRTOKEN(hashblock: widget.hash!);
       Clipboard.setData(ClipboardData(text: qrUrl));
       showSnackbar(context, "Akses alamat telah disalin");
     } catch (e) {
@@ -121,22 +121,25 @@ class _FormTransactionViewState extends State<FormTransactionView> {
               margin: EdgeInsets.only(top: 7, bottom: 7),
               child: Image.network(
                   "$serverUri/image/${widget.metadata.imageUri}")),
-          Container(
-              margin: EdgeInsets.only(top: 7, bottom: 7),
-              child: SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                    onPressed: generateQr,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.qr_code, color: Colors.white),
-                        Text("Bagikan Arsip Transaksi",
-                            style: style.textMenuStyle(context, Colors.white)),
-                      ],
-                    ),
-                    style: style.button(context, isLoading)),
-              )),
+          widget.hash == null
+              ? Container()
+              : Container(
+                  margin: EdgeInsets.only(top: 7, bottom: 7),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                        onPressed: generateQr,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.qr_code, color: Colors.white),
+                            Text("Bagikan Arsip Transaksi",
+                                style:
+                                    style.textMenuStyle(context, Colors.white)),
+                          ],
+                        ),
+                        style: style.button(context, isLoading)),
+                  )),
         ],
       ));
 

@@ -20,7 +20,7 @@ class FormTransactionView extends StatefulWidget {
 }
 
 class _FormTransactionViewState extends State<FormTransactionView> {
-  late Metadata metadata = widget.metadata;
+  Metadata get metadata => widget().metadata;
 
   final _formkey = GlobalKey<FormState>();
 
@@ -52,7 +52,8 @@ class _FormTransactionViewState extends State<FormTransactionView> {
       isLoading = true;
     });
     try {
-      String qrUrl = await _webservice.generateQRTOKEN(hashblock: widget.hash!);
+      String qrUrl =
+          await _webservice.generateQRTOKEN(hashblock: widget().hash!);
       Clipboard.setData(ClipboardData(text: qrUrl));
       showSnackbar(context, "Akses alamat telah disalin");
     } catch (e) {
@@ -120,8 +121,8 @@ class _FormTransactionViewState extends State<FormTransactionView> {
           Container(
               margin: EdgeInsets.only(top: 7, bottom: 7),
               child: Image.network(
-                  "$serverUri/image/${widget.metadata.imageUri}")),
-          widget.hash == null
+                  "$serverUri/image/${widget().metadata.imageUri}")),
+          widget().hash == null
               ? Container()
               : Container(
                   margin: EdgeInsets.only(top: 7, bottom: 7),

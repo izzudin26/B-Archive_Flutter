@@ -1,4 +1,5 @@
 import 'package:b_archive/components/MainMenu/userProfile.dart';
+import 'package:b_archive/model/payloadUser.dart';
 import 'package:b_archive/screen/archive.dart';
 import 'package:b_archive/screen/formTransaction.dart';
 import 'package:b_archive/screen/login.dart';
@@ -26,27 +27,14 @@ class MenuItem {
 }
 
 class MainMenu extends StatefulWidget {
-  MainMenu({Key? key}) : super(key: key);
+  String fullname;
+  MainMenu({Key? key, required this.fullname}) : super(key: key);
 
   @override
   State<MainMenu> createState() => _MainMenuState();
 }
 
 class _MainMenuState extends State<MainMenu> {
-  String name = "";
-  @override
-  void initState() {
-    super.initState();
-    fetchName();
-  }
-
-  void fetchName() async {
-    String? fullname = await _auth.getFullname();
-    setState(() {
-      name = fullname!;
-    });
-  }
-
   List<MenuItem> menuItems = [
     MenuItem(
         label: "Buat Arsip Transaksi",
@@ -78,7 +66,7 @@ class _MainMenuState extends State<MainMenu> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserProfile(username: name),
+            UserProfile(username: widget().fullname),
             SizedBox(height: size.height * 0.2),
             Container(
               padding: EdgeInsets.all(20),

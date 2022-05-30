@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:b_archive/model/payloadUser.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:lottie/lottie.dart';
 import 'package:b_archive/service/auth.dart' as _auth;
 import 'mainmenu.dart';
@@ -25,8 +27,18 @@ class SplashScreenState extends State<SplashScreen> {
   Future<void> fetchToken() async {
     String? token = await _auth.getToken();
     if (token != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MainMenu()));
+      PayloadUser user = await _auth.getPayload();
+      if (Jwt.isExpired(token)) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Login()));
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainMenu(
+                      fullname: user.fullname,
+                    )));
+      }
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Login()));

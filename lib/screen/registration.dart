@@ -1,4 +1,5 @@
 import 'package:b_archive/components/snackbarMessage.dart';
+import 'package:b_archive/model/payloadUser.dart';
 import 'package:b_archive/model/user.dart';
 import 'package:b_archive/screen/mainmenu.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,17 @@ class _RegistrationState extends State<Registration> {
         isLoading = true;
       });
       try {
-        await _auth.registration(User(
+        PayloadUser user = await _auth.registration(User(
             email: email.text.trim(),
             fullname: fullname.text.trim(),
             gender: gender!,
             password: passwordConfirmation.text.trim()));
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainMenu()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainMenu(
+                      fullname: user.fullname,
+                    )));
       } catch (e) {
         showSnackbar(context, "$e");
       }
@@ -159,6 +164,7 @@ class _RegistrationState extends State<Registration> {
                 margin: EdgeInsets.only(top: 10, bottom: 5),
                 child: TextFormField(
                   validator: validatePassword,
+                  obscureText: true,
                   controller: password,
                   decoration: style.textInput(context, "Password"),
                 ),
@@ -167,6 +173,7 @@ class _RegistrationState extends State<Registration> {
                 margin: EdgeInsets.only(top: 10, bottom: 15),
                 child: TextFormField(
                   validator: validateConfirmationPassword,
+                  obscureText: true,
                   controller: passwordConfirmation,
                   decoration: style.textInput(context, "Konfirmasi Password"),
                 ),

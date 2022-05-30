@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:b_archive/model/payloadUser.dart';
 import 'package:b_archive/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'uri.dart';
@@ -9,7 +10,6 @@ Future<void> saveToken(String token) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
   Map<String, dynamic> payload = Jwt.parseJwt(token);
-  print(payload);
   await prefs.setString('fullname', payload['fullname']);
 }
 
@@ -18,9 +18,10 @@ Future<String?> getToken() async {
   return prefs.getString('token');
 }
 
-Future<String?> getFullname() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('fullname');
+Future<PayloadUser> getPayload() async {
+  String? token = await getToken();
+  Map<String, dynamic> payload = Jwt.parseJwt(token!);
+  return PayloadUser.fromJson(payload);
 }
 
 Future<void> removeToken() async {
@@ -29,7 +30,7 @@ Future<void> removeToken() async {
   await prefs.remove('fullname');
 }
 
-Future<void> registration(User user) async {
+Future<PayloadUser> registration(User user) async {
   Uri url = Uri.parse("$serverUri/user/registration");
   final response = await http.post(url,
       body: jsonEncode(user.toJson()),
@@ -38,14 +39,14 @@ Future<void> registration(User user) async {
   if (response.statusCode != 200) {
     throw body["message"];
   }
-  if (response.statusCode == 200) {
-    saveToken(body["data"]["token"]);
-  }
+  String token = body['data']['token'];
+  Map<String, dynamic> payload = Jwt.parseJwt(token);
+  saveToken(body["data"]["token"]);
+  return PayloadUser.fromJson(payload);
 }
 
-Future<void> login(String email, String password) async {
+Future<PayloadUser> login(String email, String password) async {
   Map<String, dynamic> body = {"email": email, "password": password};
-
   Uri url = Uri.parse("$serverUri/user/login");
   final response = await http.post(url,
       body: jsonEncode(body), headers: {'content-type': 'application/json'});
@@ -53,7 +54,8 @@ Future<void> login(String email, String password) async {
   if (response.statusCode != 200) {
     throw resBody["message"];
   }
-  if (response.statusCode == 200) {
-    saveToken(resBody["data"]["token"]);
-  }
+  String token = resBody['data']['token'];
+  Map<String, dynamic> payload = Jwt.parseJwt(token);
+  saveToken(resBody["data"]["token"]);
+  return PayloadUser.fromJson(payload);
 }

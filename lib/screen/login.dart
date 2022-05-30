@@ -1,3 +1,4 @@
+import 'package:b_archive/model/payloadUser.dart';
 import 'package:b_archive/screen/mainmenu.dart';
 import 'package:b_archive/screen/registration.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,14 @@ class _LoginState extends State<Login> {
         isLoading = true;
       });
       try {
-        await _auth.login(email.text.trim(), password.text.trim());
+        PayloadUser user =
+            await _auth.login(email.text.trim(), password.text.trim());
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainMenu()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainMenu(
+                      fullname: user.fullname,
+                    )));
       } catch (e) {
         showSnackbar(context, "$e");
         setState(() {
